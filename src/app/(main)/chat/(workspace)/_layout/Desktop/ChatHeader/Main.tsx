@@ -2,12 +2,13 @@
 
 import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
-import { PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import Link from 'next/link';
+import { useResponsive } from 'antd-style';
+import { PanelLeftOpen } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
 
+import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import { useOpenChatSettings } from '@/hooks/useInterceptingRoutes';
 import { useGlobalStore } from '@/store/global';
 import { useSessionStore } from '@/store/session';
@@ -17,7 +18,7 @@ import Tags from './Tags';
 
 const Main = memo(() => {
   const { t } = useTranslation('chat');
-
+  const { desktop = true } = useResponsive();
   const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionSelectors.isInboxSession(s),
@@ -31,7 +32,10 @@ const Main = memo(() => {
 
   const displayTitle = isInbox ? t('inbox.title') : title;
   const displayDesc = isInbox ? t('inbox.desc') : description;
-  const showSessionPanel = useGlobalStore((s) => s.preference.showSessionPanel);
+  const [sessionExpandable, updatePreference] = useGlobalStore((s) => [
+    s.preference.showSessionPanel,
+    s.updatePreference,
+  ]);
 
   return !init ? (
     <Flexbox horizontal>
@@ -44,22 +48,16 @@ const Main = memo(() => {
     </Flexbox>
   ) : (
     <Flexbox align={'flex-start'} gap={12} horizontal>
-      {
-        <Link aria-label={t('agentsAndConversations')} href={'/chat'}>
-          <ActionIcon
-            icon={showSessionPanel ? PanelLeftClose : PanelLeftOpen}
-            onClick={() => {
-              const currentShowSessionPanel = useGlobalStore.getState().preference.showSessionPanel;
-              useGlobalStore.getState().updatePreference({
-                sessionsWidth: currentShowSessionPanel ? 0 : 320,
-                showSessionPanel: !currentShowSessionPanel,
-              });
-            }}
-            size="large"
-            title={t('agentsAndConversations')}
-          />
-        </Link>
-      }
+      {!desktop && !sessionExpandable && (
+        <ActionIcon
+          icon={PanelLeftOpen}
+          onClick={() => {
+            updatePreference({ showSessionPanel: true });
+          }}
+          size={DESKTOP_HEADER_ICON_SIZE}
+          title={t('agentsAndConversations')}
+        />
+      )}
       <Avatar
         avatar={avatar}
         background={backgroundColor}

@@ -1,8 +1,8 @@
 'use client';
 
 import { ActionIcon, Logo } from '@lobehub/ui';
-import { createStyles } from 'antd-style';
-import { MessageSquarePlus } from 'lucide-react';
+import { createStyles, useResponsive } from 'antd-style';
+import { MessageSquarePlus, PanelLeftClose } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Flexbox } from 'react-layout-kit';
@@ -10,6 +10,7 @@ import { Flexbox } from 'react-layout-kit';
 import { DESKTOP_HEADER_ICON_SIZE } from '@/const/layoutTokens';
 import SyncStatusTag from '@/features/SyncStatusInspector';
 import { useActionSWR } from '@/libs/swr';
+import { useGlobalStore } from '@/store/global';
 import { featureFlagsSelectors, useServerConfigStore } from '@/store/serverConfig';
 import { useSessionStore } from '@/store/session';
 
@@ -30,8 +31,12 @@ const Header = memo(() => {
   const { t } = useTranslation('chat');
   const [createSession] = useSessionStore((s) => [s.createSession]);
   const { enableWebrtc, showCreateSession } = useServerConfigStore(featureFlagsSelectors);
-
+  const [sessionExpandable, updatePreference] = useGlobalStore((s) => [
+    s.preference.showSessionPanel,
+    s.updatePreference,
+  ]);
   const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
+  const { desktop = true } = useResponsive();
 
   return (
     <Flexbox className={styles.top} gap={16} padding={16}>
@@ -48,6 +53,18 @@ const Header = memo(() => {
             size={DESKTOP_HEADER_ICON_SIZE}
             style={{ flex: 'none' }}
             title={t('newAgent')}
+          />
+        )}
+        {!desktop && sessionExpandable && (
+          <ActionIcon
+            icon={PanelLeftClose}
+            onClick={() => {
+              updatePreference({
+                showSessionPanel: false,
+              });
+            }}
+            size={DESKTOP_HEADER_ICON_SIZE}
+            title={t('agentsAndConversations')}
           />
         )}
       </Flexbox>
