@@ -1,6 +1,6 @@
 'use client';
 
-import { DraggablePanel, DraggablePanelContainer } from '@lobehub/ui';
+import { DraggablePanel, DraggablePanelContainer, type DraggablePanelProps } from '@lobehub/ui';
 import { createStyles, useResponsive } from 'antd-style';
 import { PropsWithChildren, memo, useEffect, useLayoutEffect, useState } from 'react';
 
@@ -33,9 +33,9 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   ]);
   const [expand, setExpand] = useState(showAgentSettings);
 
-  const handleExpand = (e: boolean) => {
-    toggleConfig(e);
+  const handleExpand: DraggablePanelProps['onExpandChange'] = (e) => {
     setExpand(e);
+    toggleConfig(e);
   };
 
   useLayoutEffect(() => {
@@ -46,7 +46,7 @@ const TopicPanel = memo(({ children }: PropsWithChildren) => {
   useEffect(() => {
     if (lg && showAgentSettings) setExpand(true);
     if (!lg) setExpand(false);
-  }, [lg, showAgentSettings]);
+  }, [lg]);
 
   return (
     <DraggablePanel

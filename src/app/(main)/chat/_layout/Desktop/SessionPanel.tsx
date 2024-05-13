@@ -32,11 +32,8 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   if (tmpWidth !== sessionsWidth) setWidth(sessionsWidth);
 
   const handleExpand: DraggablePanelProps['onExpandChange'] = (e) => {
-    updatePreference({
-      sessionsWidth: e ? 320 : 0,
-      showSessionPanel: e,
-    });
     setExpand(e);
+    updatePreference({ showSessionPanel: e });
   };
 
   const handleSizeChange: DraggablePanelProps['onSizeChange'] = (_, size) => {
@@ -55,7 +52,7 @@ const SessionPanel = memo<PropsWithChildren>(({ children }) => {
   useEffect(() => {
     if (md && sessionExpandable) setExpand(true);
     if (!md) setExpand(false);
-  }, [md, sessionExpandable]);
+  }, [md]);
 
   return (
     <DraggablePanel
