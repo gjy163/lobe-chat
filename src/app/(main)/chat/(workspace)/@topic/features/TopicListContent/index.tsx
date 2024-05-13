@@ -5,6 +5,7 @@ import { useThemeMode } from 'antd-style';
 import isEqual from 'fast-deep-equal';
 import React, { memo, useCallback, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Flexbox } from 'react-layout-kit';
 import { Virtuoso, VirtuosoHandle } from 'react-virtuoso';
 
 import { imageUrl } from '@/const/url';
@@ -58,23 +59,25 @@ const TopicListContent = memo(() => {
     <SkeletonList />
   ) : (
     <>
-      {topicLength === 0 && (
-        <EmptyCard
-          alt={t('topic.guide.desc')}
-          cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
-          desc={t('topic.guide.desc')}
-          height={120}
-          imageProps={{
-            priority: true,
-          }}
-          onVisibleChange={(visible) => {
-            updateGuideState({ topic: visible });
-          }}
-          style={{ flex: 'none', marginBottom: 12 }}
-          title={t('topic.guide.title')}
-          visible={visible}
-          width={200}
-        />
+      {topicLength === 0 && visible && (
+        <Flexbox padding={8}>
+          <EmptyCard
+            alt={t('topic.guide.desc')}
+            cover={imageUrl(`empty_topic_${isDarkMode ? 'dark' : 'light'}.webp`)}
+            desc={t('topic.guide.desc')}
+            height={120}
+            imageProps={{
+              priority: true,
+            }}
+            onVisibleChange={(visible) => {
+              updateGuideState({ topic: visible });
+            }}
+            style={{ flex: 'none', marginBottom: 12 }}
+            title={t('topic.guide.title')}
+            visible={visible}
+            width={200}
+          />
+        </Flexbox>
       )}
       <Virtuoso
         components={{ ScrollSeekPlaceholder: Placeholder }}

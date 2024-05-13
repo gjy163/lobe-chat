@@ -2,7 +2,6 @@
 
 import { ActionIcon, Avatar, ChatHeaderTitle } from '@lobehub/ui';
 import { Skeleton } from 'antd';
-import { useResponsive } from 'antd-style';
 import { PanelLeftOpen } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -18,7 +17,6 @@ import Tags from './Tags';
 
 const Main = memo(() => {
   const { t } = useTranslation('chat');
-  const { desktop = true } = useResponsive();
   const [init, isInbox, title, description, avatar, backgroundColor] = useSessionStore((s) => [
     sessionSelectors.isSomeSessionActive(s),
     sessionSelectors.isInboxSession(s),
@@ -48,7 +46,7 @@ const Main = memo(() => {
     </Flexbox>
   ) : (
     <Flexbox align={'flex-start'} gap={12} horizontal>
-      {!desktop && !sessionExpandable && (
+      {!sessionExpandable && (
         <ActionIcon
           icon={PanelLeftOpen}
           onClick={() => {

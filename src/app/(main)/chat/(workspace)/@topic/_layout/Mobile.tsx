@@ -8,7 +8,6 @@ const Layout = ({ children }: PropsWithChildren) => {
     <Flexbox gap={8} height={'100%'} padding={'8px 8px 0'} style={{ overflow: 'hidden' }}>
       <TopicSearchBar />
       <Flexbox
-        gap={12}
         height={'100%'}
         style={{ marginInline: -8, overflow: 'hidden', position: 'relative' }}
         width={'calc(100% + 16px)'}

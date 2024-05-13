@@ -1,7 +1,7 @@
 'use client';
 
 import { ActionIcon, Logo } from '@lobehub/ui';
-import { createStyles, useResponsive } from 'antd-style';
+import { createStyles } from 'antd-style';
 import { MessageSquarePlus, PanelLeftClose } from 'lucide-react';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -36,7 +36,6 @@ const Header = memo(() => {
     s.updatePreference,
   ]);
   const { mutate, isValidating } = useActionSWR('session.createSession', () => createSession());
-  const { desktop = true } = useResponsive();
 
   return (
     <Flexbox className={styles.top} gap={16} padding={16}>
@@ -55,7 +54,7 @@ const Header = memo(() => {
             title={t('newAgent')}
           />
         )}
-        {!desktop && sessionExpandable && (
+        {sessionExpandable && (
           <ActionIcon
             icon={PanelLeftClose}
             onClick={() => {
